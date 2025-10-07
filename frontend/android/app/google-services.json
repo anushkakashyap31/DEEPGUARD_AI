@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "431201958729",
+    "project_id": "deepguard-ai-3fbea",
+    "storage_bucket": "deepguard-ai-3fbea.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431201958729:android:27f1a858fec04974d0b898",
+        "android_client_info": {
+          "package_name": "com.example.frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "431201958729-5o5ri7u1ognapet8c8ds1meueklmkcfe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNKEoEQtkhwufMN6y8UhEDYFGw_AgRSGM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "431201958729-5o5ri7u1ognapet8c8ds1meueklmkcfe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
