@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/routes/app_routes.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -13,12 +15,18 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToAuth();
+    _navigateBasedOnAuth();
   }
 
-  void _navigateToAuth() async {
+  Future<void> _navigateBasedOnAuth() async {
     await Future.delayed(const Duration(seconds: 3));
-    Navigator.pushReplacementNamed(context, AppRoutes.auth);
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    if (authProvider.isLoggedIn) {
+      Navigator.pushReplacementNamed(context, AppRoutes.welcome);
+    } else {
+      Navigator.pushReplacementNamed(context, AppRoutes.login);
+    }
   }
 
   @override

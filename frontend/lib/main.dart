@@ -43,7 +43,7 @@ class DeepGuardAIApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system,
-      initialRoute: AppRoutes.welcome,
+      initialRoute: AppRoutes.splash,
       routes: AppRoutes.routes,
       onGenerateRoute: AppRoutes.generateRoute,
     );
