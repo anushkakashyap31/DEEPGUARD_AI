@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../manual/manual_mode_screen.dart';
 import '../realtime/realtime_scren.dart';
 import '../history/history_screen.dart';
 import '../about/about_screen.dart';
 import '../about/awareness_screen.dart';
 import '../settings/settings_screen.dart';
+import '../consent/consent_screen.dart';
 import '../../widgets/animated_toggle.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,6 +34,25 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Future<bool> _checkConsent() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('hasConsented') ?? false;
+  }
+
+  void _navigateMode(bool isManual) async {
+    final hasConsented = await _checkConsent();
+    if (!hasConsented && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const ConsentScreen()),
+      );
+    } else {
+      setState(() {
+        _isManualMode = isManual;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget body;
@@ -44,9 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
           AnimatedToggle(
             values: const ["Manual Mode", "Real-Time Mode"],
             onToggleCallback: (index) {
-              setState(() {
-                _isManualMode = index == 0;
-              });
+              // Consent check before switching mode
+              _navigateMode(index == 0);
             },
           ),
           Expanded(

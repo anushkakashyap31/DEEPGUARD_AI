@@ -7,6 +7,7 @@ import 'routes/app_routes.dart';
 import 'theme/app_theme.dart';
 import 'utils/notification_util.dart';
 import 'providers/auth_provider.dart';
+import 'providers/theme_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,7 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: const DeepGuardAIApp(),
     ),
@@ -37,12 +39,14 @@ class DeepGuardAIApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'DEEPGUARD AI',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeProvider.themeMode,
       initialRoute: AppRoutes.splash,
       routes: AppRoutes.routes,
       onGenerateRoute: AppRoutes.generateRoute,

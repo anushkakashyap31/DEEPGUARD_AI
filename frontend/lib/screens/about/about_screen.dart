@@ -28,7 +28,7 @@ class AboutScreen extends StatelessWidget {
               "DeepGuard AI is a next-generation mobile application designed to detect deepfakes "
               "and fraudulent voice/video calls using Artificial Intelligence. "
               "It provides a secure, elegant, and professional user experience with smooth transitions and minimalistic design.",
-              style: TextStyle(fontSize: 16, color: Colors.black87),
+              style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24),
             const Text(

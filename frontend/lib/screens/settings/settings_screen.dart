@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../providers/theme_provider.dart';
+import '../../providers/auth_provider.dart';
+import '../settings/privacy_policy_screen.dart';
+import '../../routes/app_routes.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -8,11 +13,56 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _isDarkMode = false;
   bool _notificationsEnabled = true;
+
+  // 🔹 Confirm Logout Dialog
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Confirm Logout"),
+        content: const Text("Are you sure you want to log out?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),
+            onPressed: () async {
+              Navigator.pop(ctx); // Close dialog
+              
+              // ✅ Corrected: use logoutUser() from AuthProvider
+              await Provider.of<AuthProvider>(context, listen: false)
+                  .logoutUser();
+
+              if (mounted) {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.login,
+                  (route) => false,
+                );
+              }
+            },
+            child: const Text("Logout"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 🔹 Navigate to Privacy Policy Page
+  void _openPrivacyPolicy() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const PrivacyPolicyScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Settings"),
@@ -22,18 +72,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(24.0),
         child: ListView(
           children: [
+            // 🌙 DARK MODE
             SwitchListTile(
               title: const Text("Dark Mode"),
-              value: _isDarkMode,
+              value: themeProvider.isDarkMode,
               onChanged: (val) {
-                setState(() {
-                  _isDarkMode = val;
-                });
-                // TODO: Implement actual theme change
+                themeProvider.toggleTheme(val);
               },
               secondary: const Icon(Icons.dark_mode),
             ),
             const Divider(),
+
+            // 🔔 NOTIFICATIONS
             SwitchListTile(
               title: const Text("Enable Notifications"),
               value: _notificationsEnabled,
@@ -41,25 +91,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 setState(() {
                   _notificationsEnabled = val;
                 });
-                // TODO: Implement notification toggle
+                // Later integrate with NotificationUtil
               },
               secondary: const Icon(Icons.notifications),
             ),
             const Divider(),
+
+            // 📜 PRIVACY POLICY
             ListTile(
               leading: const Icon(Icons.privacy_tip),
               title: const Text("Privacy Policy"),
-              onTap: () {
-                // TODO: Open privacy policy link
-              },
+              onTap: _openPrivacyPolicy,
             ),
             const Divider(),
+
+            // 🚪 LOGOUT
             ListTile(
-              leading: const Icon(Icons.logout),
+              leading: const Icon(Icons.logout, color: Colors.redAccent),
               title: const Text("Logout"),
-              onTap: () {
-                // TODO: Implement logout functionality
-              },
+              onTap: () => _showLogoutDialog(context),
             ),
           ],
         ),

@@ -3,6 +3,7 @@ import 'package:frontend/routes/app_routes.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -19,9 +20,21 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _navigateBasedOnAuth() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 3)); // splash delay
+
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
+    // 🔹 Check if user has already given consent
+    final prefs = await SharedPreferences.getInstance();
+    bool hasConsented = prefs.getBool('hasConsented') ?? false;
+
+    if (!hasConsented) {
+      // First time user → show consent screen
+      Navigator.pushReplacementNamed(context, AppRoutes.consent);
+      return;
+    }
+
+    // 🔹 If consent is already given → check login status
     if (authProvider.isLoggedIn) {
       Navigator.pushReplacementNamed(context, AppRoutes.welcome);
     } else {

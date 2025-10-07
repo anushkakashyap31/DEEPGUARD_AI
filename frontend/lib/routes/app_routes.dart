@@ -10,6 +10,7 @@ import '../screens/history/history_screen.dart';
 import '../screens/about/about_screen.dart';
 import '../screens/about/awareness_screen.dart';
 import '../screens/settings/settings_screen.dart';
+import '../screens/consent/consent_screen.dart'; 
 
 class AppRoutes {
   // 🔹 Route Names
@@ -25,10 +26,12 @@ class AppRoutes {
   static const String about = '/about';
   static const String awareness = '/awareness';
   static const String settings = '/settings';
+  static const String consent = '/consent';
 
   // 🔹 Map of routes (optional)
   static final Map<String, WidgetBuilder> routes = {
     splash: (_) => const SplashScreen(),
+    consent: (_) => const ConsentScreen(),
     auth: (_) => const LoginScreen(),
     login: (_) => const LoginScreen(),
     register: (_) => const RegisterScreen(),

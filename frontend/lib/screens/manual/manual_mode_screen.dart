@@ -1,8 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../consent/consent_screen.dart';
 import 'upload_screen.dart';
 
-class ManualModeScreen extends StatelessWidget {
+class ManualModeScreen extends StatefulWidget {
   const ManualModeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ManualModeScreen> createState() => _ManualModeScreenState();
+}
+
+class _ManualModeScreenState extends State<ManualModeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkConsent();
+  }
+
+  Future<void> _checkConsent() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasConsented = prefs.getBool('hasConsented') ?? false;
+
+    if (!hasConsented && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const ConsentScreen()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,26 +40,11 @@ class ManualModeScreen extends StatelessWidget {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
-          _buildUploadCard(
-            context,
-            icon: Icons.image,
-            label: "Upload Image",
-            type: "image",
-          ),
+          _buildUploadCard(context, icon: Icons.image, label: "Upload Image", type: "image"),
           const SizedBox(height: 16),
-          _buildUploadCard(
-            context,
-            icon: Icons.audiotrack,
-            label: "Upload Audio",
-            type: "audio",
-          ),
+          _buildUploadCard(context, icon: Icons.audiotrack, label: "Upload Audio", type: "audio"),
           const SizedBox(height: 16),
-          _buildUploadCard(
-            context,
-            icon: Icons.video_library,
-            label: "Upload Video",
-            type: "video",
-          ),
+          _buildUploadCard(context, icon: Icons.video_library, label: "Upload Video", type: "video"),
         ],
       ),
     );
@@ -54,9 +64,7 @@ class ManualModeScreen extends StatelessWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => UploadScreen(fileType: type),
-              ),
+              MaterialPageRoute(builder: (_) => UploadScreen(fileType: type)),
             );
           },
         ),

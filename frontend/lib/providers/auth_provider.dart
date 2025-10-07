@@ -9,20 +9,20 @@ class AuthProvider with ChangeNotifier {
   String? _errorMessage;
 
   AuthProvider() {
-    // Listen for auth state changes
+    // Listen for authentication state changes
     _authService.authStateChanges.listen((User? user) {
       _user = user;
       notifyListeners();
     });
   }
 
-  // Getters
+  // 🔹 Getters
   User? get user => _user;
   bool get isLoading => _isLoading;
   bool get isLoggedIn => _user != null;
   String? get errorMessage => _errorMessage;
 
-  // 🔹 Register with email & password
+  // 🔹 Register user
   Future<void> register(String email, String password) async {
     _setLoading(true);
     try {
@@ -35,7 +35,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // 🔹 Login with email & password
+  // 🔹 Login user
   Future<void> login(String email, String password) async {
     _setLoading(true);
     try {
@@ -48,14 +48,18 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  // 🔹 Logout
-  Future<void> logout() async {
-    await _authService.logout();
-    _user = null;
-    notifyListeners();
+  // 🔹 Logout user
+  Future<void> logoutUser() async {
+    try {
+      await _authService.logout();
+      _user = null;
+      notifyListeners();
+    } catch (e) {
+      debugPrint("Logout failed: $e");
+    }
   }
 
-  // 🔹 Private helper to manage loading state
+  // 🔹 Private helper
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
